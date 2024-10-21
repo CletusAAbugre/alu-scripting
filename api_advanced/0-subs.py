@@ -1,4 +1,7 @@
-eturns the number of subscribers for a given subreddit. """
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+""" Returns the number of subscribers for a given subreddit. """
 
 import requests
 
