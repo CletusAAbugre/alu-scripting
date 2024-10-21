@@ -3,25 +3,40 @@
 This module contains the function top_ten.
 """
 import requests
-from sys import argv
 
 
 def top_ten(subreddit):
     """
-    Returns the top ten posts for a given subreddit.
+    Queries the Reddit API and prints the titles of the first 10 hot posts
+    for a given subreddit.
+
+    If the subreddit is invalid, print "None".
     """
-    user = {'User-Agent': 'Mozilla/5.0'}
+    # Define the base URL and headers
     url = 'https://www.reddit.com/r/{}/hot/.json?limit=10'.format(subreddit)
+    headers = {'User-Agent': 'Mozilla/5.0'}
 
     try:
-        response = requests.get(url, headers=user, allow_redirects=False)
-        response.raise_for_status()
-        data = response.json()
+        # Make the request and avoid redirects
+        response = requests.get(url, headers=headers, allow_redirects=False)
+        
+        # Check for status code 200 (OK)
+        if response.status_code != 200:
+            print("None")
+            return
 
+        # Parse the JSON response
+        data = response.json()
+        
+        # Check if the 'data' and 'children' keys exist in the JSON response
         if 'data' in data and 'children' in data['data']:
-            for post in data['data']['children']:
+            posts = data['data']['children']
+            
+            # Loop through the posts and print their titles
+            for post in posts:
                 print(post['data']['title'])
-        print("OK")
+        else:
+            print("None")
     except requests.exceptions.RequestException:
         print("None")
     except ValueError:
@@ -29,7 +44,6 @@ def top_ten(subreddit):
 
 
 if __name__ == "__main__":
-    if len(argv) > 1:
-        top_ten(argv[1])
-    else:
-        print("Usage: ./script.py <subreddit>")
+    # Use this function in another script or for testing.
+    pass
+
